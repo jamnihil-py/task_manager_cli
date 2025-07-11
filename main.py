@@ -31,6 +31,15 @@ class TaskManager:
             print("Task ID does not exist")
             return None
 
+    def delete_task(self, task_id):
+        if task_id in self.tasks:
+            del self.tasks[task_id]
+            return self.tasks
+        else:
+            print("Task ID does not exist")
+            return None
+
+
 tman = TaskManager()
 tman.add_task('Cocinar')
 print(tman.tasks)
@@ -38,3 +47,5 @@ print(tman.tasks)
 tman.update_task('1', 'Lavar')
 print(tman.tasks)
 
+tman.delete_task('1')
+print(tman.tasks)
