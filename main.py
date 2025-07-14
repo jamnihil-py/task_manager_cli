@@ -101,7 +101,7 @@ class TaskManager:
 
         return self.tasks
 
-    def list_all_task(self):
+    def list_all_tasks(self):
         """
 
         :return:
@@ -111,5 +111,16 @@ class TaskManager:
 
         return self.tasks
 
+    def list_done_tasks(self):
+        """
+
+        :return:
+        """
+        for task, value in self.tasks.items():
+            if value['Status'] == 'Done':
+                print(f"{task} - {value['Description']} / {value['Status']}")
+        return self.tasks
+
 tmanager = TaskManager()
-tmanager.list_all_task()
+tmanager.change_task_status(1, 'done')
+tmanager.list_done_tasks()
