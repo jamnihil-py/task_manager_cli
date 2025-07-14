@@ -101,4 +101,15 @@ class TaskManager:
 
         return self.tasks
 
+    def list_all_task(self):
+        """
+
+        :return:
+        """
+        for task, value in self.tasks.items():
+            print(f"{task} - {value['Description']} / {value['Status']}")
+
+        return self.tasks
+
 tmanager = TaskManager()
+tmanager.list_all_task()
