@@ -121,6 +121,11 @@ class TaskManager:
                 print(f"{task} - {value['Description']} / {value['Status']}")
         return self.tasks
 
+    def list_not_done_tasks(self):
+        """"""
+        for task, value in self.tasks.items():
+            if value['Status'] == 'Todo':
+                print(f"{task} - {value['Description']} / {value['Status']}")
+        return self.tasks
+
 tmanager = TaskManager()
-tmanager.change_task_status(1, 'done')
-tmanager.list_done_tasks()
