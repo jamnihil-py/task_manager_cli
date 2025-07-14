@@ -128,4 +128,14 @@ class TaskManager:
                 print(f"{task} - {value['Description']} / {value['Status']}")
         return self.tasks
 
+    def list_progress_tasks(self):
+        """
+
+        :return:
+        """
+        for task, value in self.tasks.items():
+            if value['Status'] == 'In-Progress':
+                print(f"{task} - {value['Description']} / {value['Status']}")
+        return self.tasks
+
 tmanager = TaskManager()
