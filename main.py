@@ -30,14 +30,11 @@ class TaskManager:
         """
         task_id = str(len(self.tasks) + 1)
         date_time = datetime.datetime.now()
-        self.tasks[task_id] = {'Description': task, 'Status': 'To-do',
+
+        self.tasks[task_id] = {'Description': task, 'Status': 'Todo',
                                'createdAt': date_time.strftime('%c'),
                                'updatedAt': None,}
-
-        tasks_json = json.dumps(self.tasks)
-        with open(TASKS_PATH, 'w') as f:
-            f.write(tasks_json)
-
+        self.save_json()
         return self.tasks
 
     def update_task(self, task_id, updated_task):
@@ -47,6 +44,8 @@ class TaskManager:
         :param updated_task:
         :return:
         """
+        task_id = str(task_id)
+
         if task_id in self.tasks:
             date_time = datetime.datetime.now()
             self.tasks[task_id].update({'Description': updated_task,
@@ -57,6 +56,8 @@ class TaskManager:
             return None
 
     def delete_task(self, task_id):
+        task_id = str(task_id)
+
         if task_id in self.tasks:
             del self.tasks[task_id]
             return self.tasks
@@ -64,5 +65,40 @@ class TaskManager:
             print("Task ID does not exist")
             return None
 
+    def change_task_status(self, task_id, actual_status):
+        """
+
+        :param task_id:
+        :param actual_status:
+        :return:
+        """
+        actual_status = actual_status.strip().title()
+        task_id = str(task_id)
+
+        if task_id in self.tasks:
+
+            if actual_status == 'In-progress' or 'Done' or 'Todo':
+                date_time = datetime.datetime.now()
+                self.tasks[task_id].update({'Status': actual_status,
+                                            'updatedAt': date_time.strftime('%c')})
+                self.save_json()
+
+            else:
+                print(f"{actual_status} is not a valid status\n"
+                      f"try with 'in-progress' or 'done'")
+
+        else:
+            print(f"There is no task with id {task_id}")
+
+    def save_json(self):
+        """
+
+        :return:
+        """
+        tasks_json = json.dumps(self.tasks)
+        with open(TASKS_PATH, 'w') as f:
+            f.write(tasks_json)
+
+        return self.tasks
+
 tmanager = TaskManager()
-tmanager.add_task('Estudiar')
