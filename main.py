@@ -1,3 +1,5 @@
+import datetime
+
 class TaskManager:
     """
     Model a task manager app
@@ -13,7 +15,8 @@ class TaskManager:
         """
         task_id = str(len(self.tasks) + 1)
         self.tasks[task_id] = {'Description': task, 'Status': 'To-do',
-                               'createdAt': '', 'updatedAt': '',}
+                               'createdAt': datetime.datetime.now(),
+                               'updatedAt': None,}
 
         return self.tasks
 
@@ -25,7 +28,7 @@ class TaskManager:
         """
         if task_id in self.tasks:
             self.tasks[task_id].update({'Description': updated_task,
-                                        'updatedAt': ''})
+                                        'updatedAt': datetime.datetime.now()})
             return self.tasks[task_id]
         else:
             print("Task ID does not exist")
@@ -42,10 +45,4 @@ class TaskManager:
 
 tman = TaskManager()
 tman.add_task('Cocinar')
-print(tman.tasks)
-
-tman.update_task('1', 'Lavar')
-print(tman.tasks)
-
-tman.delete_task('1')
 print(tman.tasks)
