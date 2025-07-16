@@ -38,20 +38,28 @@ class TaskManager:
         self.save_json()
         return self.tasks
 
-    def update_task(self, task_id, updated_task):
+    def update_task(self, task_id, new_task):
         """
 
         :param task_id:
-        :param updated_task:
+        :param new_task:
         :return:
         """
         task_id = str(task_id)
 
         if task_id in self.tasks:
+            old_task = self.tasks[task_id]['Description']
             date_time = datetime.datetime.now()
-            self.tasks[task_id].update({'Description': updated_task,
+
+            self.tasks[task_id].update({'Description': new_task,
                                         'updatedAt': date_time.strftime('%c')})
+            self.save_json()
+
+            if self.tasks[task_id]['Description'] == new_task:
+                print(f"'{old_task}' changed succesfully to '{new_task}'")
+
             return self.tasks[task_id]
+
         else:
             print("Task ID does not exist")
             return None
@@ -65,33 +73,41 @@ class TaskManager:
         task_id = str(task_id)
 
         if task_id in self.tasks:
-            del self.tasks[task_id]
+            deleted_task = self.tasks.pop(task_id)
+            print(f"'{deleted_task['Description']}' deleted succesfully")
+            self.save_json()
             return self.tasks
+
         else:
             print("Task ID does not exist")
             return None
 
-    def change_task_status(self, task_id, status):
+    def mark_status(self, task_id, new_status):
         """
 
         :param task_id:
-        :param status:
+        :param new_status:
         :return:
         """
-        status = status.strip().lower()
         task_id = str(task_id)
 
         if task_id in self.tasks:
+            old_status = self.tasks[task_id]['Status']
 
-            if status == 'in-progress' or 'done' or 'todo':
+            if new_status != old_status:
                 date_time = datetime.datetime.now()
-                self.tasks[task_id].update({'Status': status,
-                                            'updatedAt': date_time.strftime('%c')})
+
+                self.tasks[task_id].update({
+                    'Status': new_status, 'updatedAt': date_time.strftime('%c')
+                })
+                print(
+                    f"'{self.tasks[task_id]['Description']}' status changed from "
+                    f"'{old_status}' to '{new_status}'"
+                )
                 self.save_json()
 
             else:
-                print(f"{status} is not a valid status\n"
-                      f"try with 'in-progress' or 'done'")
+                print("The task already has that status")
 
         else:
             print(f"There is no task with id {task_id}")
@@ -101,9 +117,8 @@ class TaskManager:
 
         :return:
         """
-        tasks_json = json.dumps(self.tasks)
         with open(TASKS_PATH, 'w') as f:
-            f.write(tasks_json)
+            f.write(json.dumps(self.tasks))
         return self.tasks
 
     def list(self, status=None):
@@ -152,17 +167,17 @@ def main():
 
     #Update command
     update_parser = subparser.add_parser('update')
-    update_parser.add_argument('task_id', help='Task ID to update')
-    update_parser.add_argument('update', help='Task updated')
+    update_parser.add_argument('task_id', type=int, help='Task ID to update')
+    update_parser.add_argument('update', help='New task')
 
     #Delete command
     delete_parser = subparser.add_parser('delete')
-    delete_parser.add_argument('task_id', help='Task ID to be deleted')
+    delete_parser.add_argument('task_id', type=int, help='Task ID to be deleted')
 
-    #Change status command
-    change_status_parser = subparser.add_parser('change')
-    change_status_parser.add_argument('task_id', help='Task ID to change status')
-    change_status_parser.add_argument('status',
+    #Mark status command
+    mark_parser = subparser.add_parser('mark')
+    mark_parser.add_argument('task_id', type=int, help='Task ID to change status')
+    mark_parser.add_argument('status',
                                       choices=['todo', 'in-progress', 'done'],
                                       help='New Status')
 
@@ -181,8 +196,8 @@ def main():
         task_manager.update_task(args.task_id, args.update)
     elif args.command == 'delete':
         task_manager.delete_task(args.task_id)
-    elif args.command == 'change':
-        task_manager.change_task_status(args.task_id, args.status)
+    elif args.command == 'mark':
+        task_manager.mark_status(args.task_id, args.status)
     elif args.command == 'list':
         task_manager.list(args.status)
 
