@@ -14,13 +14,14 @@ class TaskManager:
         Initializes the class
         """
         try:
-            json_tasks = open(TASKS_PATH, 'r')
-            self.tasks = json.load(json_tasks)
+            with open(TASKS_PATH, 'r') as f:
+                self.tasks = json.load(f)
 
-        except FileNotFoundError:
-            with open(TASKS_PATH, 'w') as f:
-                f.write('')
+        except (FileNotFoundError, json.JSONDecodeError):
             self.tasks = {}
+            with open(TASKS_PATH, 'w') as f:
+                f.write(json.dumps(self.tasks))
+
 
     def add_task(self, task):
         """
