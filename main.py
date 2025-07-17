@@ -29,17 +29,22 @@ class TaskManager:
         :param task: Task to be added
         :return: self.tasks
         """
-        task_id = len(self.tasks) + 1
-        while str(task_id) in self.tasks:
-            task_id += 1
+        if not self.tasks:
+            task_id = 1
+        else:
+            task_id = len(self.tasks)
+            while str(task_id) in self.tasks:
+                task_id += 1
 
         date_time = datetime.datetime.now()
+        task = task.capitalize()
 
         self.tasks[str(task_id)] = {'Description': task, 'Status': 'todo',
                                'createdAt': date_time.strftime('%c'),
                                'updatedAt': None,}
         self.save_json()
-        print(f"{task} successfully added")
+        print(f"'{task}' added successfully (ID: {task_id})")
+
         return self.tasks
 
     def update_task(self, task_id, new_task):
@@ -54,6 +59,7 @@ class TaskManager:
         if task_id in self.tasks:
             old_task = self.tasks[task_id]['Description']
             date_time = datetime.datetime.now()
+            new_task = new_task.capitalize()
 
             self.tasks[task_id].update({'Description': new_task,
                                         'updatedAt': date_time.strftime('%c')})
