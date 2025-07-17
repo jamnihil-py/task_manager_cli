@@ -164,12 +164,15 @@ def main():
 
     while True:
         try:
-            print(task_manager.tasks)
             user_input = input("> ").strip()
             if not user_input:
                 continue
 
-            parts = shlex.split(user_input)
+            try:
+                parts = shlex.split(user_input)
+            except ValueError:
+                print("Please, enter a valid input")
+                continue
 
             parser = argparse.ArgumentParser(description='Task Manager CLI')
             subparser = parser.add_subparsers(dest='command', required=True)
