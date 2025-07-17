@@ -137,19 +137,19 @@ class TaskManager:
 
         elif status == 'done':
             for task, value in self.tasks.items():
-                if value['Status'] == 'Done':
+                if value['Status'] == 'done':
                     print(f"{task} - {value['Description']} / {value['Status']}")
             return self.tasks
 
         elif status == 'todo':
             for task, value in self.tasks.items():
-                if value['Status'] == 'Todo':
+                if value['Status'] == 'todo':
                     print(f"{task} - {value['Description']} / {value['Status']}")
             return self.tasks
 
         elif status == 'in-progress':
             for task, value in self.tasks.items():
-                if value['Status'] == 'In-Progress':
+                if value['Status'] == 'in-progress':
                     print(f"{task} - {value['Description']} / {value['Status']}")
             return self.tasks
 
