@@ -42,7 +42,6 @@ class TaskManager:
         self.tasks[str(task_id)] = {'Description': task, 'Status': 'todo',
                                'createdAt': date_time.strftime('%c'),
                                'updatedAt': None,}
-        self.save_json()
         print(f"'{task}' added successfully (ID: {task_id})")
 
         return self.tasks
@@ -63,7 +62,6 @@ class TaskManager:
 
             self.tasks[task_id].update({'Description': new_task,
                                         'updatedAt': date_time.strftime('%c')})
-            self.save_json()
 
             if self.tasks[task_id]['Description'] == new_task:
                 print(f"'{old_task}' changed successfully to '{new_task}'")
@@ -85,7 +83,6 @@ class TaskManager:
         if task_id in self.tasks:
             deleted_task = self.tasks.pop(task_id)
             print(f"'{deleted_task['Description']}' deleted successfully")
-            self.save_json()
             return self.tasks
 
         else:
@@ -114,22 +111,12 @@ class TaskManager:
                     f"'{self.tasks[task_id]['Description']}' status changed from "
                     f"'{old_status}' to '{new_status}'"
                 )
-                self.save_json()
 
             else:
                 print("The task already has that status")
 
         else:
             print(f"There is no task with id {task_id}")
-
-    def save_json(self):
-        """
-
-        :return:
-        """
-        with open(TASKS_PATH, 'w') as f:
-            f.write(json.dumps(self.tasks))
-        return self.tasks
 
     def list(self, status=None):
         """
@@ -163,6 +150,15 @@ class TaskManager:
                           f"(Status: {value['Status'].capitalize()})")
             return self.tasks
 
+        return self.tasks
+
+    def save_json(self):
+        """
+
+        :return:
+        """
+        with open(TASKS_PATH, 'w') as f:
+            f.write(json.dumps(self.tasks))
         return self.tasks
 
 def main():
@@ -213,6 +209,12 @@ def main():
                                      choices=['todo', 'in-progress', 'done'],
                                      help='Filter by status')
 
+            #Quit command
+            quit_parser = subparser.add_parser('q')
+
+            #Save command
+            save_parser = subparser.add_parser('s')
+
             ###
             args = parser.parse_args(parts)
 
@@ -226,9 +228,17 @@ def main():
                 task_manager.mark_status(str(args.task_id), args.status)
             elif args.command == 'list':
                 task_manager.list(args.status)
+            elif args.command == 'q':
+                print("Exiting...")
+                task_manager.save_json()
+                break
+            elif args.command == 's':
+                task_manager.save_json()
+                print("Saved successfully")
 
         except KeyboardInterrupt:
-            print("Exit")
+            print("Exiting...")
+            task_manager.save_json()
             break
 
         except SystemExit:
