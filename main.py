@@ -138,25 +138,29 @@ class TaskManager:
         """
         if status is None:
             for task, value in self.tasks.items():
-                print(f"{task} - {value['Description']} / {value['Status']}")
+                print(f" [ID: {task}] '{value['Description']}' -"
+                      f" (Status: {value['Status'].capitalize()})")
             return self.tasks
 
         elif status == 'done':
             for task, value in self.tasks.items():
                 if value['Status'] == 'done':
-                    print(f"{task} - {value['Description']} / {value['Status']}")
+                    print(f" [ID: {task}] '{value['Description']}' -"
+                          f" (Status: {value['Status'].capitalize()})")
             return self.tasks
 
         elif status == 'todo':
             for task, value in self.tasks.items():
                 if value['Status'] == 'todo':
-                    print(f"{task} - {value['Description']} / {value['Status']}")
+                    print(f" [ID: {task}] '{value['Description']}' - "
+                          f"(Status: {value['Status'].capitalize()})")
             return self.tasks
 
         elif status == 'in-progress':
             for task, value in self.tasks.items():
                 if value['Status'] == 'in-progress':
-                    print(f"{task} - {value['Description']} / {value['Status']}")
+                    print(f" [ID: {task}] '{value['Description']}' - "
+                          f"(Status: {value['Status'].capitalize()})")
             return self.tasks
 
         return self.tasks
