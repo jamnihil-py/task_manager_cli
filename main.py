@@ -125,28 +125,11 @@ class TaskManager:
             for task, value in self.tasks.items():
                 print(f" [ID: {task}] '{value['Description']}' -"
                       f" (Status: {value['Status'].capitalize()})")
-            return self.tasks
-
-        elif status == 'done':
+        else:
             for task, value in self.tasks.items():
-                if value['Status'] == 'done':
+                if value['Status'] == status:
                     print(f" [ID: {task}] '{value['Description']}' -"
                           f" (Status: {value['Status'].capitalize()})")
-            return self.tasks
-
-        elif status == 'todo':
-            for task, value in self.tasks.items():
-                if value['Status'] == 'todo':
-                    print(f" [ID: {task}] '{value['Description']}' - "
-                          f"(Status: {value['Status'].capitalize()})")
-            return self.tasks
-
-        elif status == 'in-progress':
-            for task, value in self.tasks.items():
-                if value['Status'] == 'in-progress':
-                    print(f" [ID: {task}] '{value['Description']}' - "
-                          f"(Status: {value['Status'].capitalize()})")
-            return self.tasks
 
         return self.tasks
 
