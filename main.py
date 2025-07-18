@@ -32,9 +32,7 @@ class TaskManager:
         if not self.tasks:
             task_id = 1
         else:
-            task_id = len(self.tasks)
-            while str(task_id) in self.tasks:
-                task_id += 1
+            task_id = int(max(self.tasks)) + 1
 
         date_time = datetime.datetime.now()
         task = task.capitalize()
