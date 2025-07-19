@@ -131,6 +131,43 @@ def main():
     """
     task_manager = TaskManager()
 
+    parser = argparse.ArgumentParser(description='Task Manager CLI')
+    subparser = parser.add_subparsers(dest='command', required=True)
+
+    # Add command
+    add_parser = subparser.add_parser('add')
+    add_parser.add_argument('description', help='Task description')
+
+    # Update command
+    update_parser = subparser.add_parser('update')
+    update_parser.add_argument('task_id', type=int, help='Task ID to update')
+    update_parser.add_argument('update', help='New task')
+
+    # Delete command
+    delete_parser = subparser.add_parser('delete')
+    delete_parser.add_argument('task_id', type=int,
+                               help='Task ID to be deleted')
+
+    # Mark status command
+    mark_parser = subparser.add_parser('mark')
+    mark_parser.add_argument('task_id', type=int,
+                             help='Task ID to change status')
+    mark_parser.add_argument('status',
+                             choices=['todo', 'in-progress', 'done'],
+                             help='New Status')
+
+    # List command
+    list_parser = subparser.add_parser('list')
+    list_parser.add_argument('status', nargs='?',
+                             choices=['todo', 'in-progress', 'done'],
+                             help='Filter by status')
+
+    # Quit command
+    quit_parser = subparser.add_parser('q')
+
+    # Save command
+    save_parser = subparser.add_parser('s')
+
     while True:
         try:
             user_input = input("> ").strip()
@@ -143,42 +180,6 @@ def main():
                 print("Please, enter a valid input")
                 continue
 
-            parser = argparse.ArgumentParser(description='Task Manager CLI')
-            subparser = parser.add_subparsers(dest='command', required=True)
-
-            #Add command
-            add_parser = subparser.add_parser('add')
-            add_parser.add_argument('description', help='Task description')
-
-            #Update command
-            update_parser = subparser.add_parser('update')
-            update_parser.add_argument('task_id', type=int, help='Task ID to update')
-            update_parser.add_argument('update', help='New task')
-
-            #Delete command
-            delete_parser = subparser.add_parser('delete')
-            delete_parser.add_argument('task_id', type=int, help='Task ID to be deleted')
-
-            #Mark status command
-            mark_parser = subparser.add_parser('mark')
-            mark_parser.add_argument('task_id', type=int, help='Task ID to change status')
-            mark_parser.add_argument('status',
-                                              choices=['todo', 'in-progress', 'done'],
-                                              help='New Status')
-
-            #List command
-            list_parser = subparser.add_parser('list')
-            list_parser.add_argument('status', nargs='?',
-                                     choices=['todo', 'in-progress', 'done'],
-                                     help='Filter by status')
-
-            #Quit command
-            quit_parser = subparser.add_parser('q')
-
-            #Save command
-            save_parser = subparser.add_parser('s')
-
-            ###
             args = parser.parse_args(parts)
 
             if args.command == 'add':
