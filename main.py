@@ -13,9 +13,8 @@ class TaskManager:
     """
     def __init__(self):
         """
-        Initializes the class.
-        1-Try to open the TASKS_PATH to load the tasks.json
-        2-If not exists, create a tasks.json for the data persistence
+        Initializes the TaskManager by loading tasks from a JSON file or
+        creating one if it doesn't exist.
         """
         try:
             with open(TASKS_PATH, 'r') as f:
@@ -49,11 +48,11 @@ class TaskManager:
 
     def update_task(self, task_id, new_task):
         """
-        Updates the description of a chosen task.
-        :param task_id:
-        :param new_task:
-        :return: If task_id exist: old_task, new_task
-                 Else: None
+        Updates the description of a task.
+        :param task_id: The ID of the task to update
+        :param new_task: The new description for the task
+        :return: A tuple of (old_description, new_description) on success,
+                or None if the task ID is not found
         """
         if task_id in self.tasks:
             old_task = self.tasks[task_id]['Description']
@@ -70,9 +69,9 @@ class TaskManager:
     def delete_task(self, task_id):
         """
         Deletes a chosen task.
-        :param task_id:
-        :return: If task_id: deleted_task
-                 Else: None
+        :param task_id: Task ID to be deleted
+        :return: Returns (deleted_task) on a successful delete
+                or None if the task ID is not found
         """
         if task_id in self.tasks:
             deleted_task = self.tasks.pop(task_id)
@@ -83,13 +82,12 @@ class TaskManager:
 
     def mark_status(self, task_id, new_status):
         """
-        Changes a task status.
-        :param task_id:
-        :param new_status:
-        :return: If task_id and new_status != old_status: old_status, new_status,
-                 self.tasks[task_id]['Description']
-                 Elif task_id and new_status == old_status: 'NO_CHANGE'
-                 Else: None
+        Changes the status of a task.
+        :param task_id: The ID of the task to update
+        :param new_status: The new status to set
+        :return: A tuple (old_status, new_status, description) when successful.
+                 Returns the string 'NO_CHANGE' if the task already has the new status
+                 Returns None if the task ID is not found
         """
         if task_id in self.tasks:
             old_status = self.tasks[task_id]['Status']
@@ -110,22 +108,16 @@ class TaskManager:
 
     def list(self, status=None):
         """
-        List tasks by status filter
-        :param status:
-        :return: task_dict
+        List tasks, with an optional filter for status
+        :param status: Optional; The status to filter task by (e.g., 'done').
+        :return: A dictionary containing the tasks that match the filter
         """
         if status is None:
-            tasks_dict = {}
-            for task, value in self.tasks.items():
-                tasks_dict[task] = value
+            return self.tasks
 
         else:
-            tasks_dict = {}
-            for task, value in self.tasks.items():
-                if value['Status'] == status:
-                    tasks_dict[task] = value
-
-        return tasks_dict
+            tasks_dict = {task_id: value for task_id, value in self.tasks.items() if value['Status'] == status}
+            return tasks_dict
 
     def save_json(self):
         """
@@ -138,11 +130,7 @@ class TaskManager:
 
 def main():
     """
-    Handles the inputs and the visual representation
-    Has:
-    1-Argument parser for the user's inputs
-    2-Loop with calls to each TaskManager method depending on the command
-    :return:
+    Runs the main interactive loop for the commmand-line task manager.
     """
     task_manager = TaskManager()
 
@@ -244,8 +232,6 @@ def main():
                     print(f"There is no task with '{args.status}' status")
 
             elif args.command == 'q':
-                print("Saving...")
-                task_manager.save_json()
                 break
 
             elif args.command == 's':
@@ -253,12 +239,13 @@ def main():
                 print("Saved successfully")
 
         except KeyboardInterrupt:
-            print("Saving...")
-            task_manager.save_json()
             break
 
         except SystemExit:
             continue
+
+    print("Exiting and saving...")
+    task_manager.save_json()
 
 if __name__ == '__main__':
     main()
