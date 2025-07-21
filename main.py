@@ -13,7 +13,9 @@ class TaskManager:
     """
     def __init__(self):
         """
-        Initializes the class
+        Initializes the class.
+        1-Try to open the TASKS_PATH to load the tasks.json
+        2-If not exists, create a tasks.json for the data persistence
         """
         try:
             with open(TASKS_PATH, 'r') as f:
@@ -26,9 +28,9 @@ class TaskManager:
 
     def add_task(self, task):
         """
-        Adds a task to the tasks dictionary
-        :param task: Task to be added
-        :return: self.tasks
+        Adds a task to the task manager
+        :param task: Task description
+        :return: task, task_id
         """
         if not self.tasks:
             task_id = 1
@@ -47,10 +49,11 @@ class TaskManager:
 
     def update_task(self, task_id, new_task):
         """
-
+        Updates the description of a chosen task.
         :param task_id:
         :param new_task:
-        :return:
+        :return: If task_id exist: old_task, new_task
+                 Else: None
         """
         if task_id in self.tasks:
             old_task = self.tasks[task_id]['Description']
@@ -66,9 +69,10 @@ class TaskManager:
 
     def delete_task(self, task_id):
         """
-
+        Deletes a chosen task.
         :param task_id:
-        :return:
+        :return: If task_id: deleted_task
+                 Else: None
         """
         if task_id in self.tasks:
             deleted_task = self.tasks.pop(task_id)
@@ -79,10 +83,13 @@ class TaskManager:
 
     def mark_status(self, task_id, new_status):
         """
-
+        Changes a task status.
         :param task_id:
         :param new_status:
-        :return:
+        :return: If task_id and new_status != old_status: old_status, new_status,
+                 self.tasks[task_id]['Description']
+                 Elif task_id and new_status == old_status: 'NO_CHANGE'
+                 Else: None
         """
         if task_id in self.tasks:
             old_status = self.tasks[task_id]['Status']
@@ -103,8 +110,9 @@ class TaskManager:
 
     def list(self, status=None):
         """
-
-        :return:
+        List tasks by status filter
+        :param status:
+        :return: task_dict
         """
         if status is None:
             tasks_dict = {}
@@ -121,8 +129,8 @@ class TaskManager:
 
     def save_json(self):
         """
-
-        :return:
+        Saves the current self.tasks to the json archive
+        :return: self.tasks
         """
         with open(TASKS_PATH, 'w') as f:
             f.write(json.dumps(self.tasks))
@@ -130,7 +138,10 @@ class TaskManager:
 
 def main():
     """
-
+    Handles the inputs and the visual representation
+    Has:
+    1-Argument parser for the user's inputs
+    2-Loop with calls to each TaskManager method depending on the command
     :return:
     """
     task_manager = TaskManager()
