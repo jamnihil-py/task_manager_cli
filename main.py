@@ -62,7 +62,7 @@ class TaskManager:
             return old_task, new_task
 
         else:
-            return False, False
+            return None
 
     def delete_task(self, task_id):
         """
@@ -95,10 +95,11 @@ class TaskManager:
                 })
                 return old_status, new_status, self.tasks[task_id]['Description']
 
-            return None, None, None
+            else:
+                return 'NO_CHANGE'
 
         else:
-            return False, False, False
+            return None
 
     def list(self, status=None):
         """
@@ -106,16 +107,17 @@ class TaskManager:
         :return:
         """
         if status is None:
+            tasks_dict = {}
             for task, value in self.tasks.items():
-                print(f" [ID: {task}] '{value['Description']}' -"
-                      f" (Status: {value['Status'].capitalize()})")
+                tasks_dict[task] = value
+
         else:
+            tasks_dict = {}
             for task, value in self.tasks.items():
                 if value['Status'] == status:
-                    print(f" [ID: {task}] '{value['Description']}' -"
-                          f" (Status: {value['Status'].capitalize()})")
+                    tasks_dict[task] = value
 
-        return self.tasks
+        return tasks_dict
 
     def save_json(self):
         """
@@ -188,10 +190,11 @@ def main():
                 print(f"'{task}' added successfully (ID: {task_id})")
 
             elif args.command == 'update':
-                old_task, new_task = task_manager.update_task(
+                result = task_manager.update_task(
                     str(args.task_id), args.update
                 )
-                if old_task:
+                if result:
+                    old_task, new_task = result
                     print(f"'{old_task}' changed successfully to '{new_task}'")
                 else:
                     print("Task ID does not exist")
@@ -205,21 +208,29 @@ def main():
                     print("Task ID does not exist")
 
             elif args.command == 'mark':
-                old_status, new_status, task = task_manager.mark_status(
+                result = task_manager.mark_status(
                     str(args.task_id), args.status
                 )
-                if old_status:
+                if result == 'NO_CHANGE':
+                    print(f"The task already has that status")
+                elif result is None:
+                    print("Task ID does not exist")
+                else:
+                    print(type(result))
+                    old_status, new_status, task = result
                     print(
                         f"'{task}' status changed from "
                         f"'{old_status.capitalize()}' to '{new_status.capitalize()}'"
                     )
-                elif old_status is None:
-                    print(f"The task already has that status")
-                else:
-                    print("Task ID does not exist")
 
             elif args.command == 'list':
-                task_manager.list(args.status)
+                tasks_dict = task_manager.list(args.status)
+                if tasks_dict:
+                    for task, value in tasks_dict.items():
+                        print(f" [ID: {task}] '{value['Description']}' -"
+                              f" (Status: {value['Status'].capitalize()})")
+                else:
+                    print(f"There is no task with '{args.status}' status")
 
             elif args.command == 'q':
                 print("Saving...")
