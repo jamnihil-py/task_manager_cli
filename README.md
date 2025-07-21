@@ -72,6 +72,7 @@ mark 1 done
 
 ```bash
 list
+list [`status`]
 ```
 **Output:**
 ```
@@ -86,6 +87,7 @@ list [`status`]
 Tasks marked as '[status]'
 ```
 
+### Save progress
 ```bash
 s
 ```
@@ -94,6 +96,7 @@ s
 Saves the progress
 ```
 
+### Quit
 ```bash
 q
 ```
