@@ -215,7 +215,6 @@ def main():
                 elif result is None:
                     print("Task ID does not exist")
                 else:
-                    print(type(result))
                     old_status, new_status, task = result
                     print(
                         f"'{task}' status changed from "
@@ -229,7 +228,7 @@ def main():
                         print(f" [ID: {task}] '{value['Description']}' -"
                               f" (Status: {value['Status'].capitalize()})")
                 else:
-                    print(f"There is no task with '{args.status}' status")
+                    print(f"Tasks not found")
 
             elif args.command == 'q':
                 break
