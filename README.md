@@ -77,13 +77,6 @@ list [`status`]
 **Output:**
 ```
 All tasks
-```
-
-```bash
-list [`status`]
-```
-**Output:**
-```
 Tasks marked as '[status]'
 ```
 
