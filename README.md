@@ -24,7 +24,7 @@ In your terminal, navigate to the project folder and run:
 python main.py
 ```
 
-## 🛠Usage
+## Usage
 
 After starting the app, you can use the following commands:
 
@@ -68,7 +68,7 @@ mark 1 done
 'Study Python' status changed from 'Todo' to 'Done'
 ```
 
-### 📋 List Tasks
+### List Tasks
 
 ```bash
 list
@@ -79,19 +79,11 @@ All tasks
 ```
 
 ```bash
-list done
+list [`status`]
 ```
 **Output:**
 ```
-Tasks marked as 'Done'
-```
-
-```bash
-list todo
-```
-**Output:**
-```
-Tasks still marked as 'Todo'
+Tasks marked as '[status]'
 ```
 
 ```bash
@@ -110,7 +102,7 @@ q
 Quits the program
 ```
 
-## 👤 Author
+## Author
 
 Created by jamnihil-py
 Feel free to fork, suggest changes, or submit issues.
