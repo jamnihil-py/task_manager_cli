@@ -5,6 +5,7 @@ import shlex
 from pathlib import Path
 
 TASKS_PATH = Path('tasks.json')
+STATUSES = ('todo', 'done', 'in-progress')
 
 class TaskManager:
     """
@@ -35,9 +36,10 @@ class TaskManager:
             task_id = int(max(self.tasks)) + 1
 
         date_time = datetime.datetime.now()
+        initial_status = STATUSES[0]
         task = task.capitalize()
 
-        self.tasks[str(task_id)] = {'Description': task, 'Status': 'todo',
+        self.tasks[str(task_id)] = {'Description': task, 'Status': initial_status,
                                'createdAt': date_time.strftime('%c'),
                                'updatedAt': None,}
 
@@ -153,13 +155,12 @@ def main():
     mark_parser.add_argument('task_id', type=int,
                              help='Task ID to change status')
     mark_parser.add_argument('status',
-                             choices=['todo', 'in-progress', 'done'],
-                             help='New Status')
+                             choices=STATUSES, help='New Status')
 
     # List command
     list_parser = subparser.add_parser('list')
     list_parser.add_argument('status', nargs='?',
-                             choices=['todo', 'in-progress', 'done'],
+                             choices=STATUSES,
                              help='Filter by status')
 
     # Quit command
